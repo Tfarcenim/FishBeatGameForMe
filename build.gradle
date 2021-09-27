@@ -20,11 +20,28 @@ dependencies {
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
     modImplementation "curse.maven:identity-391390:3323413"
-
 	modImplementation "curse.maven:pehkui-319596:3457608"
 
-    // PSA: Some older mods, compiled on Loom 0.2.1, might have outdated Maven POMs.
-	// You may need to force-disable transitiveness on them.
+	//these are needed because of the other 2 mods
+
+	// Player Ability Lib: https://github.com/Ladysnake/PlayerAbilityLib
+	include "io.github.ladysnake:PlayerAbilityLib:${project.pal_version}"
+	modImplementation ("io.github.ladysnake:PlayerAbilityLib:${project.pal_version}") {
+		exclude group: "net.fabricmc.fabric-api"
+	}
+
+	// Cardinal Components: https://github.com/OnyxStudios/Cardinal-Components-API
+	modImplementation "io.github.onyxstudios:Cardinal-Components-API:${project.cardinal_version}"
+	include "io.github.onyxstudios:Cardinal-Components-API:${project.cardinal_version}"
+	include "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-base:${project.cardinal_version}"
+	include "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-entity:${project.cardinal_version}"
+
+	// configs
+	modImplementation 'com.github.Draylar.omega-config:omega-config-base:1.0.4-beta'
+	include 'com.github.Draylar.omega-config:omega-config-base:1.0.4-beta:min'
+
+	modImplementation 	"com.github.Virtuoel:KanosConfig:${kanos_config_tag}"
+	include "com.github.Virtuoel:KanosConfig:${kanos_config_tag}"
 }
 
 repositories {
@@ -34,6 +51,17 @@ repositories {
             includeGroup "curse.maven"
         }
     }
+
+	maven { url 'https://jitpack.io' }
+
+	maven {
+		name = 'Ladysnake Mods'
+		url = 'https://ladysnake.jfrog.io/artifactory/mods'
+		content {
+			includeGroup 'io.github.ladysnake'
+			includeGroupByRegex 'io\\.github\\.onyxstudios.*'
+		}
+	}
 }
 
 processResources {

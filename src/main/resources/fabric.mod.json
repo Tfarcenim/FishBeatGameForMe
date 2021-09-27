@@ -28,7 +28,9 @@
 
   "depends": {
     "fabricloader": ">=0.7.4",
-    "fabric": "*"
+    "fabric": "*",
+    "identity": ">=1.13.2-1.16.5",
+    "pehkui" : ">=2.4.0"
   },
   "suggests": {
     "flamingo": "*"
