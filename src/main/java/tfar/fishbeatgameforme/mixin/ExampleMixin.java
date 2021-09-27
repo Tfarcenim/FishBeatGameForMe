@@ -1,4 +1,4 @@
-package net.fabricmc.example.mixin;
+package tfar.fishbeatgameforme.mixin;
 
 import net.minecraft.client.gui.screens.TitleScreen;
 import org.spongepowered.asm.mixin.Mixin;
