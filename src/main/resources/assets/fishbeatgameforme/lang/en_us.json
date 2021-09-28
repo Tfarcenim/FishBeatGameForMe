@@ -1,0 +1,5 @@
+{
+  "fishbeatthegameforme.command.start.incorrect_players": "Incorrect Number of players, currently %s; requires 2",
+  "fishbeatthegameforme.command.stop.not_running" : "The game is not currently running",
+  "fishbeatthegameforme.command.start.already_running" : "The game is already running"
+}

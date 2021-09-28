@@ -19,7 +19,7 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "tfar.fishbeatgameforme.ExampleMod"
+      "tfar.fishbeatgameforme.FishBeatGameForMe"
     ]
   },
   "mixins": [

@@ -5,7 +5,7 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.minecraft.commands.CommandSourceStack;
 
-public class ExampleMod implements ModInitializer, CommandRegistrationCallback {
+public class FishBeatGameForMe implements ModInitializer, CommandRegistrationCallback {
 
 	public static final String MODID = "fishbeatgameforme";
 
