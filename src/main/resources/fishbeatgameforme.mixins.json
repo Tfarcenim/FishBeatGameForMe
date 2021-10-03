@@ -4,9 +4,12 @@
   "package": "tfar.fishbeatgameforme.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "ItemStackMixin",
+    "MobEffectUtilMixin",
+    "TropicalFishRendererMixin"
   ],
   "client": [
-    "ExampleMixin"
+    "ServerPlayerGameModeMixin"
   ],
   "injectors": {
     "defaultRequire": 1
