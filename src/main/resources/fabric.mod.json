@@ -20,6 +20,9 @@
   "entrypoints": {
     "main": [
       "tfar.fishbeatgameforme.FishBeatGameForMe"
+    ],
+    "client": [
+      "tfar.fishbeatgameforme.Client"
     ]
   },
   "mixins": [
