@@ -14,7 +14,6 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.TridentItem;
 import tfar.fishbeatgameforme.mixin.AttributeSupplierAccess;
 import tfar.fishbeatgameforme.mixin.DefaultAttributesAccess;
 import tfar.fishbeatgameforme.network.PacketHandler;
@@ -25,14 +24,14 @@ public class FishBeatGameForMe implements ModInitializer, CommandRegistrationCal
 
 	public static final String MODID = "fishbeatgameforme";
 
-	public static final Item FISH_TRIDENT = new TridentItem(new Item.Properties().durability(250).tab(CreativeModeTab.TAB_COMBAT));
+	public static final Item FISH_TRIDENT = new LoyaltyTridentItem(new Item.Properties().durability(250).tab(CreativeModeTab.TAB_COMBAT));
 
 	@Override
 	public void onInitialize() {
 		Registry.register(Registry.ITEM,new ResourceLocation(MODID,"fish_trident"),FISH_TRIDENT);
 		CommandRegistrationCallback.EVENT.register(this);
 		PacketHandler.registerMessages();
-		adjustAttributes();
+	//	adjustAttributes();
 	}
 
 	private void adjustAttributes() {
@@ -54,6 +53,6 @@ public class FishBeatGameForMe implements ModInitializer, CommandRegistrationCal
 
 	@Override
 	public void register(CommandDispatcher<CommandSourceStack> dispatcher, boolean dedicated) {
-		StartCommand.register(dispatcher);
+		GameCommand.register(dispatcher);
 	}
 }

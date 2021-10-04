@@ -10,4 +10,8 @@ public class GameManager {
 
     public static UUID player2;
 
+    public static void clear() {
+        player1 = player2 = null;
+        running = false;
+    }
 }

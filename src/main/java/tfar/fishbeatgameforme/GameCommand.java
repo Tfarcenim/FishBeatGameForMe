@@ -11,18 +11,20 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.PlayerList;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 
-public class StartCommand {
+public class GameCommand {
 
     public static void register(CommandDispatcher<CommandSourceStack> commandDispatcher) {
         commandDispatcher.register(Commands.literal(FishBeatGameForMe.MODID)
                 .then(Commands.literal("start")
-                        .executes(StartCommand::start))
+                        .executes(GameCommand::start))
 
                 .then(Commands.literal("stop")
-                        .executes(StartCommand::stop))
+                        .executes(GameCommand::stop))
         );
     }
 
@@ -35,7 +37,7 @@ public class StartCommand {
             PlayerList playerList = server.getPlayerList();
             ServerPlayer player1 = playerList.getPlayer(GameManager.player1);
             Components.CURRENT_IDENTITY.get(player1).setIdentity(null);
-            GameManager.running = false;
+            GameManager.clear();
         } else {
             throw new CommandRuntimeException(new TranslatableComponent("fishbeatthegameforme.command.stop.not_running"));
         }
@@ -61,6 +63,8 @@ public class StartCommand {
                 ServerPlayer player1 = playerList.getPlayers().get(0);
 
                 GameManager.player1 = player1.getGameProfile().getId();
+
+                player1.addEffect(new MobEffectInstance(MobEffects.JUMP,1000000000,1,false,false,false));
 
                 IdentityGranting.grantByAttack(player1, EntityType.TROPICAL_FISH);
 
