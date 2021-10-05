@@ -6,7 +6,7 @@ import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import org.lwjgl.glfw.GLFW;
-import tfar.fishbeatgameforme.network.C2SMessageToggleUseType;
+import tfar.fishbeatgameforme.network.C2SKeybindPacket;
 
 public class Client implements ClientModInitializer {
 
@@ -20,7 +20,7 @@ public class Client implements ClientModInitializer {
 
     public static void keyPressed(Minecraft client) {
         if (SUMMON_FISH.consumeClick()) {
-            C2SMessageToggleUseType.send(
+            C2SKeybindPacket.send(
                     KeyBind.SUMMON_FISH
             );
         }

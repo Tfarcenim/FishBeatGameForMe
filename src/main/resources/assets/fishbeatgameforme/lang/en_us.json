@@ -1,5 +1,7 @@
 {
-  "fishbeatthegameforme.command.start.incorrect_players": "Incorrect Number of players, currently %s; requires 2",
-  "fishbeatthegameforme.command.stop.not_running" : "The game is not currently running",
-  "fishbeatthegameforme.command.start.already_running" : "The game is already running"
+  "fishbeatgameforme.command.start.incorrect_players": "Incorrect Number of players, currently %s; requires 2",
+  "fishbeatgameforme.command.stop.not_running" : "The game is not currently running",
+  "fishbeatgameforme.command.start.already_running" : "The game is already running",
+  "item.fishbeatgameforme.fish_trident" : "Fish Trident",
+  "item.fishbeatgameforme.special_compass" : "Special Compass"
 }

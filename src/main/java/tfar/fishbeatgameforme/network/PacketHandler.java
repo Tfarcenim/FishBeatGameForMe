@@ -9,6 +9,6 @@ public class PacketHandler {
     public static ResourceLocation toggle_use = new ResourceLocation(FishBeatGameForMe.MODID, "toggle_use");
 
     public static void registerMessages() {
-        ServerPlayNetworking.registerGlobalReceiver(toggle_use, new C2SMessageToggleUseType());
+        ServerPlayNetworking.registerGlobalReceiver(toggle_use, new C2SKeybindPacket());
     }
 }

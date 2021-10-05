@@ -1,10 +1,16 @@
-package tfar.fishbeatgameforme;
+package tfar.fishbeatgameforme.item;
 
+import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TridentItem;
 import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.level.Level;
+import tfar.fishbeatgameforme.GameManager;
 
 public class LoyaltyTridentItem extends TridentItem {
     public LoyaltyTridentItem(Properties properties) {
@@ -19,5 +25,19 @@ public class LoyaltyTridentItem extends TridentItem {
             stack.enchant(Enchantments.LOYALTY,1);
             nonNullList.add(stack);
         }
+    }
+
+    @Override
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand interactionHand) {
+
+        if (!level.isClientSide) {
+
+            GameManager.fishTimestamp = level.getGameTime() + 10;
+            for (Direction dir : Direction.values()) {
+                GameManager.fishLocations.add(player.blockPosition().relative(dir, 2));
+            }
+        }
+
+        return super.use(level, player, interactionHand);
     }
 }

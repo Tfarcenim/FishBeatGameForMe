@@ -13,9 +13,10 @@ import net.minecraft.world.entity.animal.TropicalFish;
 import tfar.fishbeatgameforme.GameManager;
 import tfar.fishbeatgameforme.KeyBind;
 import tfar.fishbeatgameforme.TropicalFishDuck;
+import tfar.fishbeatgameforme.Util;
 
 
-public class C2SMessageToggleUseType implements ServerPlayNetworking.PlayChannelHandler {
+public class C2SKeybindPacket implements ServerPlayNetworking.PlayChannelHandler {
 
 
     public static void send(KeyBind keyBind) {
@@ -28,10 +29,7 @@ public class C2SMessageToggleUseType implements ServerPlayNetworking.PlayChannel
         if (player.getGameProfile().getId().equals(GameManager.player1)) {//only the "fish" can use these abilities
             switch (keyBind) {
                 case SUMMON_FISH: {
-                    TropicalFish fish = EntityType.TROPICAL_FISH.create(player.level);
-                    fish.setPos(player.getX(),player.getY(),player.getZ());
-                    ((TropicalFishDuck)fish).setAttacksMobs(true);
-                    player.level.addFreshEntity(fish);
+                    Util.summonAttackingFish(player);
                 }
             }
         }

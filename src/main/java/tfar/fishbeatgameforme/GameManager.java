@@ -1,5 +1,9 @@
 package tfar.fishbeatgameforme;
 
+import net.minecraft.core.BlockPos;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class GameManager {
@@ -14,4 +18,9 @@ public class GameManager {
         player1 = player2 = null;
         running = false;
     }
+
+    public static long fishTimestamp;
+
+    public static List<BlockPos> fishLocations = new ArrayList<>();
+
 }
