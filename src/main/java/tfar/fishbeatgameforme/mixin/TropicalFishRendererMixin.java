@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import tfar.fishbeatgameforme.FishItemLayer;
+import tfar.fishbeatgameforme.client.FishItemLayer;
 
 @Mixin(TropicalFishRenderer.class)
 abstract class TropicalFishRendererMixin extends MobRenderer<TropicalFish, EntityModel<TropicalFish>> {

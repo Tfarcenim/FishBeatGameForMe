@@ -17,9 +17,12 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Tiers;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import tfar.fishbeatgameforme.item.LoyaltyTridentItem;
+import tfar.fishbeatgameforme.item.SpecialCompassItem;
+import tfar.fishbeatgameforme.item.SpecialFishingRodItem;
 import tfar.fishbeatgameforme.mixin.AttributeSupplierAccess;
 import tfar.fishbeatgameforme.mixin.DefaultAttributesAccess;
 import tfar.fishbeatgameforme.network.PacketHandler;
@@ -31,10 +34,14 @@ public class FishBeatGameForMe implements ModInitializer, CommandRegistrationCal
 	public static final String MODID = "fishbeatgameforme";
 
 	public static final Item FISH_TRIDENT = new LoyaltyTridentItem(new Item.Properties().durability(250).tab(CreativeModeTab.TAB_COMBAT));
+	public static final Item SPECIAL_COMPASS = new SpecialCompassItem( 1, -2.8F, Tiers.WOOD, new Item.Properties().tab(CreativeModeTab.TAB_TOOLS));
+	public static final Item SPECIAL_FISHING_ROD = new SpecialFishingRodItem(new Item.Properties().durability(64).tab(CreativeModeTab.TAB_TOOLS));
 
 	@Override
 	public void onInitialize() {
 		Registry.register(Registry.ITEM,new ResourceLocation(MODID,"fish_trident"),FISH_TRIDENT);
+		Registry.register(Registry.ITEM,new ResourceLocation(MODID,"special_compass"),SPECIAL_COMPASS);
+		Registry.register(Registry.ITEM,new ResourceLocation(MODID,"special_fishing_rod"),SPECIAL_FISHING_ROD);
 		CommandRegistrationCallback.EVENT.register(this);
 		ServerTickEvents.END_SERVER_TICK.register(this);
 		PacketHandler.registerMessages();

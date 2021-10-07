@@ -22,7 +22,7 @@
       "tfar.fishbeatgameforme.FishBeatGameForMe"
     ],
     "client": [
-      "tfar.fishbeatgameforme.Client"
+      "tfar.fishbeatgameforme.client.Client"
     ]
   },
   "mixins": [
