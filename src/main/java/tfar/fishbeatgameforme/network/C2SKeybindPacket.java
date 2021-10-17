@@ -8,11 +8,8 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.animal.TropicalFish;
 import tfar.fishbeatgameforme.GameManager;
 import tfar.fishbeatgameforme.KeyBind;
-import tfar.fishbeatgameforme.TropicalFishDuck;
 import tfar.fishbeatgameforme.Util;
 
 

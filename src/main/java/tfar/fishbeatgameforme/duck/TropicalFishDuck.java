@@ -1,4 +1,4 @@
-package tfar.fishbeatgameforme;
+package tfar.fishbeatgameforme.duck;
 
 public interface TropicalFishDuck {
 

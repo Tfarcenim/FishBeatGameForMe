@@ -4,20 +4,27 @@ import com.mojang.brigadier.CommandDispatcher;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.fabricmc.fabric.api.event.player.UseItemCallback;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Tiers;
+import net.minecraft.world.entity.animal.AbstractFish;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import tfar.fishbeatgameforme.item.LoyaltyTridentItem;
@@ -29,7 +36,7 @@ import tfar.fishbeatgameforme.network.PacketHandler;
 
 import java.util.Map;
 
-public class FishBeatGameForMe implements ModInitializer, CommandRegistrationCallback , ServerTickEvents.EndTick {
+public class FishBeatGameForMe implements ModInitializer, CommandRegistrationCallback , ServerTickEvents.EndTick , UseItemCallback {
 
 	public static final String MODID = "fishbeatgameforme";
 
@@ -44,6 +51,7 @@ public class FishBeatGameForMe implements ModInitializer, CommandRegistrationCal
 		Registry.register(Registry.ITEM,new ResourceLocation(MODID,"special_fishing_rod"),SPECIAL_FISHING_ROD);
 		CommandRegistrationCallback.EVENT.register(this);
 		ServerTickEvents.END_SERVER_TICK.register(this);
+		UseItemCallback.EVENT.register(this);
 		PacketHandler.registerMessages();
 	//	adjustAttributes();
 	}
@@ -78,5 +86,17 @@ public class FishBeatGameForMe implements ModInitializer, CommandRegistrationCal
 			}
 			GameManager.fishLocations.clear();
 		}
+	}
+
+	@Override
+	public InteractionResultHolder<ItemStack> interact(Player player, Level world, InteractionHand hand) {
+		ItemStack stack = player.getItemInHand(hand);
+		if (stack.getItem() == Items.PUFFERFISH || stack.getItem() == Items.TROPICAL_FISH) {
+			if (!world.isClientSide) {
+				Util.spawnFishFromItem(stack,world,player.blockPosition());
+				stack.shrink(1);
+			}
+		}
+		return InteractionResultHolder.pass(stack);
 	}
 }

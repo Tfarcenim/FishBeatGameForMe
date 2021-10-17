@@ -11,6 +11,8 @@ import net.minecraft.world.item.FishingRodItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
+import tfar.fishbeatgameforme.duck.FishingHookDuck;
+import tfar.fishbeatgameforme.Hooks;
 
 public class SpecialFishingRodItem extends FishingRodItem {
     public SpecialFishingRodItem(Properties properties) {
@@ -19,11 +21,11 @@ public class SpecialFishingRodItem extends FishingRodItem {
 
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand interactionHand) {
         ItemStack itemStack = player.getItemInHand(interactionHand);
-        int i;
+        int lure;
         if (player.fishing != null) {
             if (!level.isClientSide) {
-                i = player.fishing.retrieve(itemStack);
-                itemStack.hurtAndBreak(i, player, (playerx) -> {
+                lure = player.fishing.retrieve(itemStack);
+                itemStack.hurtAndBreak(lure, player, (playerx) -> {
                     playerx.broadcastBreakEvent(interactionHand);
                 });
             }
@@ -32,9 +34,12 @@ public class SpecialFishingRodItem extends FishingRodItem {
         } else {
             level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.FISHING_BOBBER_THROW, SoundSource.NEUTRAL, 0.5F, 0.4F / (random.nextFloat() * 0.4F + 0.8F));
             if (!level.isClientSide) {
-                i = EnchantmentHelper.getFishingSpeedBonus(itemStack);
-                int k = EnchantmentHelper.getFishingLuckBonus(itemStack);
-                level.addFreshEntity(new FishingHook(player, level, k, i));
+                int xpPoints = itemStack.hasTag() ? itemStack.getTag().getInt("xp") : 0;
+                lure = Math.min(5,Hooks.getLevels(xpPoints));//lure values over 5 cause the fishing rod to not work
+                int luck = EnchantmentHelper.getFishingLuckBonus(itemStack);
+                FishingHook fishingHook = new FishingHook(player, level, luck, lure);
+                ((FishingHookDuck)fishingHook).markSpecial();
+                level.addFreshEntity(fishingHook);
             }
 
             player.awardStat(Stats.ITEM_USED.get(this));
