@@ -41,7 +41,7 @@ public class FishBeatGameForMe implements ModInitializer, CommandRegistrationCal
 	public static final String MODID = "fishbeatgameforme";
 
 	public static final Item FISH_TRIDENT = new LoyaltyTridentItem(new Item.Properties().durability(250).tab(CreativeModeTab.TAB_COMBAT));
-	public static final Item SPECIAL_COMPASS = new SpecialCompassItem( 1, -2.8F, Tiers.WOOD, new Item.Properties().tab(CreativeModeTab.TAB_TOOLS));
+	public static final Item SPECIAL_COMPASS = new SpecialCompassItem( 1, -2.8F, Tiers.NETHERITE, new Item.Properties().tab(CreativeModeTab.TAB_TOOLS));
 	public static final Item SPECIAL_FISHING_ROD = new SpecialFishingRodItem(new Item.Properties().durability(64).tab(CreativeModeTab.TAB_TOOLS));
 
 	@Override

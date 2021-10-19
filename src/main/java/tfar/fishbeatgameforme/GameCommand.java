@@ -65,6 +65,7 @@ public class GameCommand {
                 GameManager.player1 = player1.getGameProfile().getId();
 
                 player1.addEffect(new MobEffectInstance(MobEffects.JUMP,1000000000,1,false,false,false));
+                player1.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION,1000000000,1,false,false,false));
 
                 IdentityGranting.grantByAttack(player1, EntityType.TROPICAL_FISH);
 
@@ -74,6 +75,7 @@ public class GameCommand {
 
                 if (playerCount == 2) {
                     ServerPlayer player2 = playerList.getPlayers().get(1);
+                    player2.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION,1000000000,1,false,false,false));
                 }
                 GameManager.running = true;
                 return playerCount;

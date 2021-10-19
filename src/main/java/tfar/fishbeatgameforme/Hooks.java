@@ -7,7 +7,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.FishingHook;
 import net.minecraft.world.item.ItemStack;
@@ -19,7 +21,10 @@ import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.function.Predicate;
 
 public class Hooks {
 
@@ -100,4 +105,54 @@ public class Hooks {
             }
         }
     }
+
+    public static void mergeIntercept(ItemEntity entity) {
+        Level level = entity.level;
+        if (!level.isClientSide) {
+            ItemStack stack = entity.getItem();
+            if (stack.getItem() == FishBeatGameForMe.SPECIAL_COMPASS) {
+                int xpPoints = stack.hasTag() ? stack.getTag().getInt("xp") : 0;
+                int xpLevel = xpPoints / 64;
+                int remainder = 64 - (xpPoints % 64);
+
+
+                if (xpLevel < UPGRADEABLES.size()) {
+
+                    Predicate<ItemEntity> predicate = UPGRADEABLES.get(xpLevel);
+
+                    List<ItemEntity> list = level.getEntitiesOfClass(ItemEntity.class, entity.getBoundingBox().inflate(0.5D, 0.0D, 0.5D), (itemEntityx) -> itemEntityx != entity && predicate.test(itemEntityx));
+
+                    for (ItemEntity itemEntity : list) {
+                        ItemStack secondStack = itemEntity.getItem();
+                        if (secondStack.getCount() > remainder) {
+                            secondStack.shrink(remainder);
+                            stack.getOrCreateTag().putInt("xp",remainder + xpPoints);
+                            return;
+                        } else {
+                            int count = secondStack.getCount();
+                            stack.getOrCreateTag().putInt("xp",count + xpPoints);
+                            itemEntity.remove();
+                        }
+                    }
+                } else {
+                    return;
+                }
+            }
+        }
+    }
+
+    public static List<Predicate<ItemEntity>> UPGRADEABLES = new ArrayList<>();
+
+    static {
+        UPGRADEABLES.add(entity -> {
+            return entity.getItem().getItem().is(ItemTags.PLANKS);
+        });
+        UPGRADEABLES.add(entity -> {
+            return entity.getItem().getItem() == Items.IRON_INGOT;
+        });
+        UPGRADEABLES.add(entity -> {
+            return entity.getItem().getItem().is(ItemTags.PLANKS);
+        });
+    }
+
 }

@@ -7,6 +7,8 @@
     "AbstractFishMixin",
     "FishingHookMixin",
     "FishingHookRendererMixin",
+    "FoodDataMixin",
+    "ItemEntityMixin",
     "ItemStackMixin",
     "LivingEntityMixin",
     "MobEffectUtilMixin",
