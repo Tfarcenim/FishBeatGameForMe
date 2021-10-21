@@ -9,6 +9,7 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 
 import java.util.Map;
 
+//this breaks hot reloading
 @Mixin(DefaultAttributes.class)
 public interface DefaultAttributesAccess {
 

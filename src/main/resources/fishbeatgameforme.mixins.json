@@ -5,9 +5,9 @@
   "compatibilityLevel": "JAVA_8",
   "mixins": [
     "AbstractFishMixin",
-    "ClientPacketListenerMixin",
+    "AttributeSupplierAccess",
+    "DefaultAttributesAccess",
     "FishingHookMixin",
-    "FishingHookRendererMixin",
     "FoodDataMixin",
     "ItemEntityMixin",
     "ItemStackMixin",
@@ -18,6 +18,8 @@
     "TropicalFishMixin"
   ],
   "client": [
+    "ClientPacketListenerMixin",
+    "FishingHookRendererMixin",
     "GuiMixin",
     "TropicalFishRendererMixin"
   ],

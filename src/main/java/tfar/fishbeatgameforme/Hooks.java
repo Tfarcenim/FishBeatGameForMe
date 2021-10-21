@@ -32,17 +32,6 @@ public class Hooks {
         level.sendParticles(ParticleTypes.SPLASH, pos.getX(), pos.getY(), pos.getZ(), 1, 0, 1, 0, 1);
     }
 
-    public static void onJump(LivingEntity entity) {
-        if (entity instanceof AbstractClientPlayer && ((AbstractClientPlayer) entity).getGameProfile().getId().equals(GameManager.player1)) {
-            AbstractClientPlayer player = (AbstractClientPlayer) entity;
-            Level level = player.level;
-            for (int i = 0; i < 20; i++) {
-                level.addParticle(ParticleTypes.SPLASH, player.getX(), player.getY(), player.getZ(), 1, 1, 1);
-            }
-            player.playSound(SoundEvents.GENERIC_SPLASH, 1, 1);
-        }
-    }
-
     public static void fishingRodXp(Player player, ItemStack held, int i) {
         int currentXp = held.getOrCreateTag().getInt("xp");
         currentXp += i;

@@ -10,10 +10,14 @@ import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.resources.sounds.MinecartSoundInstance;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.AbstractMinecart;
 import net.minecraft.world.item.FishingRodItem;
@@ -21,6 +25,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.lwjgl.glfw.GLFW;
 import tfar.fishbeatgameforme.FishBeatGameForMe;
+import tfar.fishbeatgameforme.GameManager;
 import tfar.fishbeatgameforme.Hooks;
 import tfar.fishbeatgameforme.KeyBind;
 import tfar.fishbeatgameforme.network.C2SKeybindPacket;
@@ -33,6 +38,17 @@ public class Client implements ClientModInitializer {
 
     public static KeyMapping GROW = new KeyMapping("grow", GLFW.GLFW_KEY_EQUAL,FishBeatGameForMe.MODID);
     public static KeyMapping SHRINK = new KeyMapping("shrink", GLFW.GLFW_KEY_MINUS,FishBeatGameForMe.MODID);
+
+    public static void onJump(LivingEntity entity) {
+        if (entity instanceof AbstractClientPlayer && ((AbstractClientPlayer) entity).getGameProfile().getId().equals(GameManager.player1)) {
+            AbstractClientPlayer player = (AbstractClientPlayer) entity;
+            Level level = player.level;
+            for (int i = 0; i < 20; i++) {
+                level.addParticle(ParticleTypes.SPLASH, player.getX(), player.getY(), player.getZ(), 1, 1, 1);
+            }
+            player.playSound(SoundEvents.GENERIC_SPLASH, 1, 1);
+        }
+    }
 
 
     @Override

@@ -8,6 +8,7 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 
 import java.util.Map;
 
+//this breaks hot reloading
 @Mixin(AttributeSupplier.class)
 public interface AttributeSupplierAccess {
 

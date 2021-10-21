@@ -5,7 +5,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import tfar.fishbeatgameforme.Hooks;
+import tfar.fishbeatgameforme.client.Client;
 
 @Mixin(LivingEntity.class)
 public class LivingEntityMixin {
@@ -13,6 +13,8 @@ public class LivingEntityMixin {
     @Inject(method = "jumpFromGround",at = @At("RETURN"))
     private void onJump(CallbackInfo ci) {
         LivingEntity livingEntity = (LivingEntity)(Object)this;
-        Hooks.onJump(livingEntity);
+        if (livingEntity.level.isClientSide) {
+            Client.onJump(livingEntity);
+        }
     }
 }
