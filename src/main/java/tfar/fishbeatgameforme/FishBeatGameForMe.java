@@ -1,6 +1,7 @@
 package tfar.fishbeatgameforme;
 
 import com.mojang.brigadier.CommandDispatcher;
+import draylar.identity.api.event.UnlockIdentityCallback;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
@@ -11,22 +12,22 @@ import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.animal.AbstractFish;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.LargeFireball;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import tfar.fishbeatgameforme.entity.WaterboltEntity;
 import tfar.fishbeatgameforme.item.LoyaltyTridentItem;
 import tfar.fishbeatgameforme.item.SpecialCompassItem;
 import tfar.fishbeatgameforme.item.SpecialFishingRodItem;
@@ -36,7 +37,7 @@ import tfar.fishbeatgameforme.network.PacketHandler;
 
 import java.util.Map;
 
-public class FishBeatGameForMe implements ModInitializer, CommandRegistrationCallback , ServerTickEvents.EndTick , UseItemCallback {
+public class FishBeatGameForMe implements ModInitializer, CommandRegistrationCallback , ServerTickEvents.EndTick , UseItemCallback, UnlockIdentityCallback {
 
 	public static final String MODID = "fishbeatgameforme";
 
@@ -44,13 +45,17 @@ public class FishBeatGameForMe implements ModInitializer, CommandRegistrationCal
 	public static final Item SPECIAL_COMPASS = new SpecialCompassItem( 1, -2.8F, Tiers.NETHERITE, new Item.Properties().tab(CreativeModeTab.TAB_TOOLS));
 	public static final Item SPECIAL_FISHING_ROD = new SpecialFishingRodItem(new Item.Properties().durability(64).tab(CreativeModeTab.TAB_TOOLS));
 
+	public static final EntityType<WaterboltEntity> WATER_BOLT = EntityType.Builder.<WaterboltEntity>of(WaterboltEntity::new, MobCategory.MISC).sized(1.0F, 1.0F).clientTrackingRange(4).updateInterval(10).build("water_bolt");
+
 	@Override
 	public void onInitialize() {
 		Registry.register(Registry.ITEM,new ResourceLocation(MODID,"fish_trident"),FISH_TRIDENT);
 		Registry.register(Registry.ITEM,new ResourceLocation(MODID,"special_compass"),SPECIAL_COMPASS);
 		Registry.register(Registry.ITEM,new ResourceLocation(MODID,"special_fishing_rod"),SPECIAL_FISHING_ROD);
+		Registry.register(Registry.ENTITY_TYPE,new ResourceLocation(MODID,"water_bolt"),WATER_BOLT);
 		CommandRegistrationCallback.EVENT.register(this);
 		ServerTickEvents.END_SERVER_TICK.register(this);
+		UnlockIdentityCallback.EVENT.register(this);
 		UseItemCallback.EVENT.register(this);
 		PacketHandler.registerMessages();
 	//	adjustAttributes();
@@ -98,5 +103,10 @@ public class FishBeatGameForMe implements ModInitializer, CommandRegistrationCal
 			}
 		}
 		return InteractionResultHolder.pass(stack);
+	}
+
+	@Override
+	public InteractionResult unlock(ServerPlayer serverPlayer, ResourceLocation resourceLocation) {
+		return InteractionResult.FAIL;
 	}
 }

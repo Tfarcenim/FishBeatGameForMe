@@ -15,14 +15,12 @@ import net.minecraft.world.entity.projectile.FishingHook;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -151,7 +149,7 @@ public class Hooks {
             return entity.getItem().getItem() == Items.IRON_INGOT;
         });
         UPGRADEABLES.add(entity -> {
-            return entity.getItem().getItem().is(ItemTags.PLANKS);
+            return entity.getItem().getItem() == Items.DIAMOND;
         });
     }
 
