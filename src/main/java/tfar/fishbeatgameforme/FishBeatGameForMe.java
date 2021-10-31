@@ -6,6 +6,7 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
@@ -41,9 +42,9 @@ public class FishBeatGameForMe implements ModInitializer, CommandRegistrationCal
 
 	public static final String MODID = "fishbeatgameforme";
 
-	public static final Item FISH_TRIDENT = new LoyaltyTridentItem(new Item.Properties().durability(250).tab(CreativeModeTab.TAB_COMBAT));
+	public static final Item FISH_TRIDENT = new LoyaltyTridentItem(new Item.Properties().durability(1000).tab(CreativeModeTab.TAB_COMBAT));
 	public static final Item SPECIAL_COMPASS = new SpecialCompassItem( 1, -2.8F, Tiers.NETHERITE, new Item.Properties().tab(CreativeModeTab.TAB_TOOLS));
-	public static final Item SPECIAL_FISHING_ROD = new SpecialFishingRodItem(new Item.Properties().durability(64).tab(CreativeModeTab.TAB_TOOLS));
+	public static final Item SPECIAL_FISHING_ROD = new SpecialFishingRodItem(new Item.Properties().durability(256).tab(CreativeModeTab.TAB_TOOLS));
 
 	public static final EntityType<WaterboltEntity> WATER_BOLT = EntityType.Builder.<WaterboltEntity>of(WaterboltEntity::new, MobCategory.MISC).sized(1.0F, 1.0F).clientTrackingRange(4).updateInterval(10).build("water_bolt");
 
@@ -58,7 +59,8 @@ public class FishBeatGameForMe implements ModInitializer, CommandRegistrationCal
 		UnlockIdentityCallback.EVENT.register(this);
 		UseItemCallback.EVENT.register(this);
 		PacketHandler.registerMessages();
-	//	adjustAttributes();
+		if (!FabricLoader.getInstance().isDevelopmentEnvironment())
+		adjustAttributes();
 	}
 
 	private void adjustAttributes() {

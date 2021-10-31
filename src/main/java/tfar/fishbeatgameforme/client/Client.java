@@ -3,6 +3,7 @@ package tfar.fishbeatgameforme.client;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.mixin.object.builder.ModelPredicateProviderRegistrySpecificAccessor;
@@ -13,6 +14,8 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.resources.sounds.MinecartSoundInstance;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
@@ -22,15 +25,20 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.AbstractMinecart;
 import net.minecraft.world.item.FishingRodItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import org.lwjgl.glfw.GLFW;
 import tfar.fishbeatgameforme.FishBeatGameForMe;
 import tfar.fishbeatgameforme.GameManager;
 import tfar.fishbeatgameforme.Hooks;
 import tfar.fishbeatgameforme.KeyBind;
+import tfar.fishbeatgameforme.item.SpecialFishingRodItem;
 import tfar.fishbeatgameforme.network.C2SKeybindPacket;
 
-public class Client implements ClientModInitializer {
+import java.util.List;
+
+public class Client implements ClientModInitializer, ItemTooltipCallback {
 
     public static KeyMapping SUMMON_FISH = new KeyMapping("summon_fish", GLFW.GLFW_KEY_I,FishBeatGameForMe.MODID);
 
@@ -73,6 +81,7 @@ public class Client implements ClientModInitializer {
             }
         });
         EntityRendererRegistry.INSTANCE.register(FishBeatGameForMe.WATER_BOLT,(manager, context) -> new WaterBoltRenderer(manager,Minecraft.getInstance().getItemRenderer()));
+        ItemTooltipCallback.EVENT.register(this);
     }
 
     public static void keyPressed(Minecraft client) {
@@ -101,6 +110,7 @@ public class Client implements ClientModInitializer {
     }
 
     public static boolean renderRodXp(PoseStack poseStack, int xStart, int screenWidth, int screenHeight) {
+        if (true) return false;
         Minecraft mc = Minecraft.getInstance();
         Player player = mc.player;
         ItemStack held = player.getMainHandItem();
@@ -117,7 +127,7 @@ public class Client implements ClientModInitializer {
         int xpPoints = held.hasTag() ? held.getTag().getInt("xp") : 0;
         if (xpPoints == 0)return;
         minecraft.getTextureManager().bind(GuiComponent.GUI_ICONS_LOCATION);
-        int j = Hooks.getXpNeededForNextLevel(xpPoints);
+        int j = 0;
         int n;
         int o;
         if (j > 0) {
@@ -130,9 +140,9 @@ public class Client implements ClientModInitializer {
         }
 
         minecraft.getProfiler().pop();
-        if (Hooks.getLevels(xpPoints) > 0) {
+        if (SpecialFishingRodItem.getLevels(xpPoints) > 0) {
             minecraft.getProfiler().push("expLevel");
-            String string = "" + Hooks.getLevels(xpPoints);
+            String string = "" + SpecialFishingRodItem.getLevels(xpPoints);
             n = (screenWidth - minecraft.gui.getFont().width(string)) / 2;
             o = screenHeight - 31 - 4;
             minecraft.gui.getFont().draw(poseStack, string, (float)(n + 1), (float)o, 0);
@@ -155,6 +165,13 @@ public class Client implements ClientModInitializer {
         level.putNonPlayerEntity(i, entity);
         if (entity instanceof AbstractMinecart) {
             minecraft.getSoundManager().play(new MinecartSoundInstance((AbstractMinecart)entity));
+        }
+    }
+
+    @Override
+    public void getTooltip(ItemStack stack, TooltipFlag context, List<Component> lines) {
+        if ((stack.getItem() == Items.PUFFERFISH || stack.getItem() == Items.TROPICAL_FISH) && stack.hasTag() && stack.getTag().getBoolean("alive")) {
+            lines.add(new TextComponent("Alive"));
         }
     }
 }

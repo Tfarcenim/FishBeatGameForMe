@@ -3,5 +3,7 @@
   "fishbeatgameforme.command.stop.not_running" : "The game is not currently running",
   "fishbeatgameforme.command.start.already_running" : "The game is already running",
   "item.fishbeatgameforme.fish_trident" : "Fish Trident",
-  "item.fishbeatgameforme.special_compass" : "Special Compass"
+  "item.fishbeatgameforme.special_compass" : "Special Compass",
+  "item.fishbeatgameforme.special_fishing_rod" : "Special Fishing Rod"
+
 }

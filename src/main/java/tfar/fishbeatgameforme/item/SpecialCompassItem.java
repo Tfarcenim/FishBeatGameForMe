@@ -1,24 +1,30 @@
 package tfar.fishbeatgameforme.item;
 
+import com.mojang.datafixers.types.templates.Hook;
 import draylar.identity.Identity;
 import draylar.identity.cca.UnlockedIdentitiesComponent;
 import draylar.identity.registry.Components;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
+import tfar.fishbeatgameforme.Hooks;
 import tfar.fishbeatgameforme.Util;
 import tfar.fishbeatgameforme.entity.WaterboltEntity;
 
@@ -105,9 +111,31 @@ public class SpecialCompassItem extends DiggerItem {
         if (itemStack.hasTag()) {
 
             int xpPoints = itemStack.getTag().getInt("xp");
-            list.add(new TextComponent("Level: "+ (xpPoints / 64 + 1)));
 
-            list.add(new TextComponent("Progress: "+ xpPoints % 64 + " /64"));
+            int levels = itemStack.getTag().getInt("level");;
+
+            list.add(new TextComponent("Level: "+ (levels + 1)));
+
+            if (levels < Hooks.UPGRADEABLES.size()) {
+
+                list.add(new TextComponent("Progress: " + xpPoints + " /"+ Hooks.UPGRADEABLES.get(levels).getRight()));
+            }
+        }
+    }
+
+    @Override
+    public boolean mineBlock(ItemStack itemStack, Level level, BlockState blockState, BlockPos blockPos, LivingEntity livingEntity) {
+        if (blockState.is(BlockTags.LOGS)) {
+            badVeinmine(level,blockPos);
+        }
+        return super.mineBlock(itemStack, level, blockState, blockPos, livingEntity);
+    }
+
+    private static void badVeinmine(Level level,BlockPos start) {
+        BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos().set(start.above());
+        while (level.getBlockState(mutable).is(BlockTags.LOGS)) {
+            level.destroyBlock(mutable,true);
+            mutable.move(Direction.UP);
         }
     }
 }

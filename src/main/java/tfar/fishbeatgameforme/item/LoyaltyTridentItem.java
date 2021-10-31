@@ -31,10 +31,10 @@ public class LoyaltyTridentItem extends TridentItem {
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand interactionHand) {
 
         if (!level.isClientSide) {
-
-            GameManager.fishTimestamp = level.getGameTime() + 10;
+            GameManager.fishTimestamp = level.getGameTime() + 15;
             for (Direction dir : Direction.values()) {
-                GameManager.fishLocations.add(player.blockPosition().relative(dir, 2));
+                if (Math.random() < .25)
+                GameManager.fishLocations.add(player.blockPosition().relative(dir, 3));
             }
         }
 

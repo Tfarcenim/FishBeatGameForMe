@@ -15,6 +15,9 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.Enchantments;
 
 public class GameCommand {
 
@@ -62,20 +65,21 @@ public class GameCommand {
             } else {
                 ServerPlayer player1 = playerList.getPlayers().get(0);
 
+                ItemStack fishTrident = new ItemStack(FishBeatGameForMe.FISH_TRIDENT);
+
+                fishTrident.enchant(Enchantments.LOYALTY,1);
+
+                player1.addItem(fishTrident);
+
                 GameManager.player1 = player1.getGameProfile().getId();
 
-                player1.addEffect(new MobEffectInstance(MobEffects.JUMP,1000000000,1,false,false,false));
-                player1.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION,1000000000,1,false,false,false));
+                addPlayerEffects(player1,0);
 
-                IdentityGranting.grantByAttack(player1, EntityType.TROPICAL_FISH);
-
-                EntityType<?> type = EntityType.TROPICAL_FISH;
-                Components.CURRENT_IDENTITY.get(player1).setIdentity((LivingEntity) type.create(player1.level));
-                player1.refreshDimensions();
+                transformToFish(player1);
 
                 if (playerCount == 2) {
                     ServerPlayer player2 = playerList.getPlayers().get(1);
-                    player2.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION,1000000000,1,false,false,false));
+                    addPlayerEffects(player2,1);
                 }
                 GameManager.running = true;
                 return playerCount;
@@ -83,5 +87,19 @@ public class GameCommand {
         } else {
             throw new CommandRuntimeException(new TranslatableComponent("fishbeatthegameforme.command.start.already_running"));
         }
+    }
+
+    public static void addPlayerEffects(ServerPlayer player, int playerNumber) {
+        if (playerNumber == 0) {
+            player.addEffect(new MobEffectInstance(MobEffects.JUMP, 1000000000, 1, false, false, false));
+        }
+        player.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, 1000000000, 1, false, false, false));
+    }
+
+    public static void transformToFish(Player player) {
+        IdentityGranting.grantByAttack(player, EntityType.TROPICAL_FISH);
+        EntityType<?> type = EntityType.TROPICAL_FISH;
+        Components.CURRENT_IDENTITY.get(player).setIdentity((LivingEntity) type.create(player.level));
+        player.refreshDimensions();
     }
 }

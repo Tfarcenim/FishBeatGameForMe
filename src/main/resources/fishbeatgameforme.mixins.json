@@ -5,8 +5,7 @@
   "compatibilityLevel": "JAVA_8",
   "mixins": [
     "AbstractFishMixin",
-    "AttributeSupplierAccess",
-    "DefaultAttributesAccess",
+
     "FishingHookMixin",
     "FoodDataMixin",
     "ItemEntityMixin",
@@ -15,6 +14,7 @@
     "MobEffectUtilMixin",
     "PlayerMixin",
     "ServerPlayerGameModeMixin",
+    "ServerPlayerMixin",
     "TropicalFishMixin"
   ],
   "client": [
