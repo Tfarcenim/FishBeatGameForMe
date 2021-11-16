@@ -9,9 +9,9 @@ import net.minecraft.network.chat.TextComponent;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
-import tfar.fishbeatgameforme.GameManager;
+import tfar.fishbeatgameforme.ServerGameManager;
 import tfar.fishbeatgameforme.KeyBind;
-import tfar.fishbeatgameforme.Util;
+import tfar.fishbeatgameforme.ModUtil;
 import virtuoel.pehkui.api.ScaleData;
 import virtuoel.pehkui.api.ScaleType;
 
@@ -29,12 +29,12 @@ public class C2SKeybindPacket implements ServerPlayNetworking.PlayChannelHandler
         {
             switch (keyBind) {
                 case SUMMON_FISH: {
-                    if (player.getGameProfile().getId().equals(GameManager.player1))//only the "fish" can use these abilities
-                        Util.summonAttackingFish(player);
+                    if (player.getGameProfile().getId().equals(ServerGameManager.player1))//only the "fish" can use these abilities
+                        ModUtil.summonAttackingFish(player);
                 }
                 break;
                 case SUMMON_TSUNAMI:{
-                    Util.summonTsunami(player);
+                    ModUtil.summonTsunami(player);
                 }
                 break;
                 case GROW:{

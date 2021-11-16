@@ -1,6 +1,7 @@
 package tfar.fishbeatgameforme;
 
 import com.mojang.brigadier.CommandDispatcher;
+import draylar.identity.api.event.IdentitySwapCallback;
 import draylar.identity.api.event.UnlockIdentityCallback;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
@@ -12,22 +13,18 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.*;
-import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraft.world.entity.ai.attributes.AttributeInstance;
-import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.animal.AbstractFish;
+import net.minecraft.world.entity.ai.attributes.*;
+import net.minecraft.world.entity.animal.TropicalFish;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.LargeFireball;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
 import tfar.fishbeatgameforme.entity.WaterboltEntity;
 import tfar.fishbeatgameforme.item.LoyaltyTridentItem;
 import tfar.fishbeatgameforme.item.SpecialCompassItem;
@@ -38,7 +35,9 @@ import tfar.fishbeatgameforme.network.PacketHandler;
 
 import java.util.Map;
 
-public class FishBeatGameForMe implements ModInitializer, CommandRegistrationCallback , ServerTickEvents.EndTick , UseItemCallback, UnlockIdentityCallback {
+public class FishBeatGameForMe implements ModInitializer,
+		CommandRegistrationCallback , ServerTickEvents.EndTick , UseItemCallback,
+		UnlockIdentityCallback, IdentitySwapCallback {
 
 	public static final String MODID = "fishbeatgameforme";
 
@@ -57,6 +56,7 @@ public class FishBeatGameForMe implements ModInitializer, CommandRegistrationCal
 		CommandRegistrationCallback.EVENT.register(this);
 		ServerTickEvents.END_SERVER_TICK.register(this);
 		UnlockIdentityCallback.EVENT.register(this);
+		IdentitySwapCallback.EVENT.register(this);
 		UseItemCallback.EVENT.register(this);
 		PacketHandler.registerMessages();
 		if (!FabricLoader.getInstance().isDevelopmentEnvironment())
@@ -87,11 +87,11 @@ public class FishBeatGameForMe implements ModInitializer, CommandRegistrationCal
 
 	@Override
 	public void onEndTick(MinecraftServer server) {
-		if (GameManager.fishTimestamp <= server.getLevel(Level.OVERWORLD).getGameTime() && !GameManager.fishLocations.isEmpty()) {
-			for (BlockPos pos : GameManager.fishLocations) {
-				Util.summonAttackingFish(server.getLevel(Level.OVERWORLD),new Vec3(pos.getX(),pos.getY(),pos.getZ()));
+		if (ServerGameManager.fishTimestamp <= server.getLevel(Level.OVERWORLD).getGameTime() && !ServerGameManager.fishLocations.isEmpty()) {
+			for (BlockPos pos : ServerGameManager.fishLocations) {
+				ModUtil.summonAttackingFish(server.getLevel(Level.OVERWORLD),new Vec3(pos.getX(),pos.getY(),pos.getZ()));
 			}
-			GameManager.fishLocations.clear();
+			ServerGameManager.fishLocations.clear();
 		}
 	}
 
@@ -100,7 +100,7 @@ public class FishBeatGameForMe implements ModInitializer, CommandRegistrationCal
 		ItemStack stack = player.getItemInHand(hand);
 		if (stack.getItem() == Items.PUFFERFISH || stack.getItem() == Items.TROPICAL_FISH) {
 			if (!world.isClientSide) {
-				Util.spawnFishFromItem(stack,world,player.blockPosition());
+				ModUtil.spawnFishFromItem(stack,world,player.blockPosition());
 				stack.shrink(1);
 			}
 		}
@@ -110,5 +110,19 @@ public class FishBeatGameForMe implements ModInitializer, CommandRegistrationCal
 	@Override
 	public InteractionResult unlock(ServerPlayer serverPlayer, ResourceLocation resourceLocation) {
 		return InteractionResult.FAIL;
+	}
+
+	private static final AttributeModifier FISH_BONUS = new AttributeModifier("fish_bonus",16, AttributeModifier.Operation.ADDITION);
+
+	@Override
+	public InteractionResult swap(ServerPlayer serverPlayer, @Nullable LivingEntity to) {
+		AttributeInstance instance = serverPlayer.getAttribute(Attributes.MAX_HEALTH);
+		if (to instanceof TropicalFish) {
+			instance.addPermanentModifier(FISH_BONUS);
+			serverPlayer.setHealth(20);
+		} else {
+			instance.removeModifier(FISH_BONUS);
+		}
+		return InteractionResult.PASS;
 	}
 }

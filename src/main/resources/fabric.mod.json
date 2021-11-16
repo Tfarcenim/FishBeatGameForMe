@@ -2,6 +2,7 @@
   "schemaVersion": 1,
   "id": "fishbeatgameforme",
   "version": "${version}",
+  "accessWidener": "fishbeatgameforme.accesswidener",
 
   "name": "Fish beat game for me",
   "description": "This is an example description! Tell everyone what your mod is about!",

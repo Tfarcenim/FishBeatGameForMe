@@ -17,7 +17,7 @@ import net.minecraft.world.phys.Vec3;
 import tfar.fishbeatgameforme.duck.AbstractFishDuck;
 import tfar.fishbeatgameforme.duck.TropicalFishDuck;
 
-public class Util {
+public class ModUtil {
 
     public static void summonAttackingFish(Player player) {
         summonAttackingFish(player.level,player.position());

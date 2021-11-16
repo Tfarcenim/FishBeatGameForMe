@@ -128,5 +128,4 @@ public class CompassModelPredicate {
             this.rotation = Mth.positiveModulo(this.rotation + this.deltaRotation, 1.0D);
         }
     }
-
 }

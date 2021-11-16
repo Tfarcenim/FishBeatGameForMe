@@ -11,8 +11,11 @@ import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.particle.Particle;
+import net.minecraft.client.particle.ParticleEngine;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.resources.sounds.MinecartSoundInstance;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
@@ -28,11 +31,13 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import org.lwjgl.glfw.GLFW;
 import tfar.fishbeatgameforme.FishBeatGameForMe;
-import tfar.fishbeatgameforme.GameManager;
+import tfar.fishbeatgameforme.ServerGameManager;
 import tfar.fishbeatgameforme.Hooks;
 import tfar.fishbeatgameforme.KeyBind;
+import tfar.fishbeatgameforme.init.ModParticleTypes;
 import tfar.fishbeatgameforme.item.SpecialFishingRodItem;
 import tfar.fishbeatgameforme.network.C2SKeybindPacket;
 
@@ -48,7 +53,7 @@ public class Client implements ClientModInitializer, ItemTooltipCallback {
     public static KeyMapping SHRINK = new KeyMapping("shrink", GLFW.GLFW_KEY_MINUS,FishBeatGameForMe.MODID);
 
     public static void onJump(LivingEntity entity) {
-        if (entity instanceof AbstractClientPlayer && ((AbstractClientPlayer) entity).getGameProfile().getId().equals(GameManager.player1)) {
+        if (entity instanceof AbstractClientPlayer && ((AbstractClientPlayer) entity).getGameProfile().getId().equals(ServerGameManager.player1)) {
             AbstractClientPlayer player = (AbstractClientPlayer) entity;
             Level level = player.level;
             for (int i = 0; i < 20; i++) {
@@ -173,5 +178,16 @@ public class Client implements ClientModInitializer, ItemTooltipCallback {
         if ((stack.getItem() == Items.PUFFERFISH || stack.getItem() == Items.TROPICAL_FISH) && stack.hasTag() && stack.getTag().getBoolean("alive")) {
             lines.add(new TextComponent("Alive"));
         }
+    }
+
+    public static void spawnWaterParticles(ParticleEngine engine,BlockPos pos) {
+        Player player = Minecraft.getInstance().player;
+        double xPos = player.getX();
+        double yPos = player.getY() + player.getBbHeight()/2;
+        double zPos = player.getZ();
+
+        Vec3 look = player.getLookAngle();
+
+        Particle directionalSplashParticle = engine.createParticle(ModParticleTypes.DIRECTIONAL_SPLASH,xPos,yPos,zPos,look.x/4,look.y/4,look.z/4);
     }
 }

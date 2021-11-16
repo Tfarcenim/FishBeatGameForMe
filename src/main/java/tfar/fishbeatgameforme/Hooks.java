@@ -1,7 +1,5 @@
 package tfar.fishbeatgameforme;
 
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -28,12 +26,6 @@ import java.util.List;
 import java.util.function.Predicate;
 
 public class Hooks {
-
-    //if this doesn't work we'll need a custom particle, yay
-    public static void spawnWaterParticles(ServerPlayer player, BlockPos pos) {
-        ServerLevel level = player.getLevel();
-        level.sendParticles(ParticleTypes.SPLASH, pos.getX(), pos.getY(), pos.getZ(), 1, 0, 1, 0, 1);
-    }
 
     public static void addRodXp(ItemStack held, int i) {
         int currentXp = held.getOrCreateTag().getInt("xp");
@@ -67,6 +59,8 @@ public class Hooks {
 
         if (level > 1) {
             list.add(new ItemStack(lvl3[hook.level.random.nextInt(lvl3.length)]));
+            list.add(new ItemStack(Items.BLAZE_ROD));
+            list.add(new ItemStack(Items.ENDER_PEARL));
         }
 
         convertFish(list);
@@ -81,7 +75,7 @@ public class Hooks {
         addRodXp(rod,fishCount);
     }
 
-    public static final Item[] lvl3 = new Item[]{Items.BLAZE_ROD,Items.ENDER_PEARL,Items.NETHERITE_INGOT,
+    public static final Item[] lvl3 = new Item[]{Items.NETHERITE_INGOT,
             Items.NETHERITE_HELMET,Items.NETHERITE_CHESTPLATE,Items.NETHERITE_LEGGINGS,Items.NETHERITE_BOOTS,
             Items.NETHERITE_PICKAXE,Items.NETHERITE_AXE,Items.NETHERITE_SHOVEL
     };
@@ -164,7 +158,7 @@ public class Hooks {
 
     static {
         UPGRADEABLES.add(Pair.of(entity -> {
-            return entity.getItem().getItem().is(ItemTags.PLANKS);
+            return entity.getItem().getItem().is(ItemTags.LOGS);
         },64));
         UPGRADEABLES.add(Pair.of(entity -> {
             return entity.getItem().getItem() == Items.IRON_INGOT;
@@ -175,10 +169,10 @@ public class Hooks {
     }
 
     public static void respawnPlayer(ServerPlayer oldPlayer, ServerPlayer newPlayer, boolean keepEverything) {
-        if (GameManager.running) {
-            if (oldPlayer.getGameProfile().getId().equals(GameManager.player1)) {
+        if (ServerGameManager.running) {
+            if (oldPlayer.getGameProfile().getId().equals(ServerGameManager.player1)) {
                 GameCommand.addPlayerEffects(oldPlayer,0);
-            } else if (oldPlayer.getGameProfile().getId().equals(GameManager.player2)) {
+            } else if (oldPlayer.getGameProfile().getId().equals(ServerGameManager.player2)) {
                 GameCommand.addPlayerEffects(oldPlayer,1);
             }
 

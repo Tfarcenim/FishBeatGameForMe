@@ -1,16 +1,13 @@
 package tfar.fishbeatgameforme.item;
 
-import com.mojang.datafixers.types.templates.Hook;
 import draylar.identity.Identity;
 import draylar.identity.cca.UnlockedIdentitiesComponent;
 import draylar.identity.registry.Components;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.InteractionHand;
@@ -25,7 +22,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import tfar.fishbeatgameforme.Hooks;
-import tfar.fishbeatgameforme.Util;
+import tfar.fishbeatgameforme.ModUtil;
 import tfar.fishbeatgameforme.entity.WaterboltEntity;
 
 import java.util.List;
@@ -66,7 +63,7 @@ public class SpecialCompassItem extends DiggerItem {
         int xpLevel = itemStack.hasTag() ? itemStack.getTag().getInt("xp") : 0;
         if (xpLevel > 1 && !level.isClientSide && entity instanceof Player) {
             if (level.getGameTime() % 200 == 0)
-            Util.summonAttackingFish((Player)entity);
+            ModUtil.summonAttackingFish((Player)entity);
 
             if (xpLevel > 2) {
                 grantFish((ServerPlayer)entity);

@@ -24,15 +24,23 @@ public class SpecialFishingRodItem extends FishingRodItem {
         super(properties);
     }
 
-    public static final double LOG2 = Math.log1p(2);
+    public static final double LOG2 = Math.log(2);
 
+    //level 2 is 8 points, level 3 is 24 points total etc
+
+    //formula is 2^(x+2) - 8;
+
+    //remember that levels start at 0, 1 should only be added for external display
     public static int getLevels(int points) {
-        if (points <=0) {
-            return 0;
-        }
 
-        double a = Math.log1p(points) / LOG2;
-        return Math.max(0,(int) (a - 2));
+        double a = Math.log(points+8) / LOG2;//log base 2
+
+        return Math.max(0,(int) (a - 3));
+    }
+
+    public static int getTotalPointsForLevel(int level) {
+        int a = 1 << (level + 3);
+        return a - 8;
     }
 
     public static int getLevels(ItemStack stack) {
@@ -55,7 +63,7 @@ public class SpecialFishingRodItem extends FishingRodItem {
             level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.FISHING_BOBBER_THROW, SoundSource.NEUTRAL, 0.5F, 0.4F / (random.nextFloat() * 0.4F + 0.8F));
             if (!level.isClientSide) {
                 int xpPoints = itemStack.hasTag() ? itemStack.getTag().getInt("xp") : 0;
-                lure = Math.min(5, getLevels(xpPoints));//lure values over 5 cause the fishing rod to not work
+                lure = 5;//Math.min(5, getLevels(xpPoints));//lure values over 5 cause the fishing rod to not work
                 int luck = EnchantmentHelper.getFishingLuckBonus(itemStack);
                 FishingHook fishingHook = new FishingHook(player, level, luck, lure);
                 ((FishingHookDuck)fishingHook).markSpecial();
@@ -80,7 +88,7 @@ public class SpecialFishingRodItem extends FishingRodItem {
 
             int nextLevelPoints = (int) Math.pow(2,levels + 3);
 
-            int thisLevelPoints = (int) Math.pow(2,levels + 2);
+            int thisLevelPoints = getTotalPointsForLevel(levels);
 
             int progress = levels > 0 ? xpPoints - thisLevelPoints : xpPoints;
 

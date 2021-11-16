@@ -10,7 +10,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TridentItem;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
-import tfar.fishbeatgameforme.GameManager;
+import tfar.fishbeatgameforme.ServerGameManager;
 
 public class LoyaltyTridentItem extends TridentItem {
     public LoyaltyTridentItem(Properties properties) {
@@ -31,10 +31,10 @@ public class LoyaltyTridentItem extends TridentItem {
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand interactionHand) {
 
         if (!level.isClientSide) {
-            GameManager.fishTimestamp = level.getGameTime() + 15;
+            ServerGameManager.fishTimestamp = level.getGameTime() + 15;
             for (Direction dir : Direction.values()) {
                 if (Math.random() < .25)
-                GameManager.fishLocations.add(player.blockPosition().relative(dir, 3));
+                ServerGameManager.fishLocations.add(player.blockPosition().relative(dir, 3));
             }
         }
 
